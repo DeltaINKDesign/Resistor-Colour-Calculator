@@ -63,24 +63,27 @@ namespace Rezystor_App
         void Sum()
         {
             int suma = 0;
-            foreach(int v in indeksy)
+            for (int i = 0; i < 4; i++)
             {
-                suma += v;
-
+                if (i == 4)
+                {
+                    suma *= (int)Math.Pow(10, indeksy[i]);
+                }
+                else
+                    suma += indeksy[i];
             }
+            textBox1.Text = suma.ToString();
+            
             
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        void Mnoznik()
         {
-            Button ourButton = (Button)sender;
-            int ind = int.Parse(ourButton.Name.Substring(ourButton.Name.Length - 1)) - 1;
-            ourButton.BackColor = kolory[indeksy[ind]++];
-            if (indeksy[ind] == 10)
+            string mnoznik;
+            if (int.Parse(textBox1.Text) % 1000 == 0)
             {
-                indeksy[ind] = 0;
+
             }
-            ourButton.Text = indeksy[ind].ToString();
         }
 
         private void zmienkolor(object sender, EventArgs e)
@@ -92,8 +95,18 @@ namespace Rezystor_App
             {
                 indeksy[ind] = 0;
             }
+            if (ind == 4)
+            {
+                ourButton.Text = Math.Pow(10, indeksy[ind]).ToString();
+            }
             ourButton.Text = indeksy[ind].ToString();
             Sum();
+            Mnoznik();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
