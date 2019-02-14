@@ -12,31 +12,32 @@ namespace Rezystor_App
 {
     public partial class Form1 : Form
     {
-        int[] indeksy = new int[5];
-        Color[] kolory = new Color[]
+        int[] index = new int[5];
+        Color[] colors = new Color[] 
         {
-            Color.Black,
-            Color.Brown,
-            Color.Red,
-            Color.Orange,
-            Color.Yellow,
-            Color.Green,
-            Color.Blue,
-            Color.Pink,
-            Color.Gray,
-            Color.White
-
+            Color.Black, Color.Brown, Color.Red, Color.Orange, Color.Yellow, Color.Green,Color.Blue, Color.Pink, Color.Gray, Color.White
         };
+        //kolory
+
+        int[] tab = new int[]
+        {
+            0,1,2,5,10,20
+        };
+
         public Form1()
         {
             InitializeComponent();
         }
 
+
+
+        int tolerancja = 0;
+
         private void Form1_Load(object sender, EventArgs e)
         {
             for(int i=1; i<5; i++)
             {
-                indeksy[i] = 0;
+                index[i] = 0;
             }
         }
 
@@ -60,48 +61,81 @@ namespace Rezystor_App
 
         }
 
-        void Sum()
+        void Suma()
         {
-            int suma = 0;
-            for (int i = 0; i < 4; i++)
+            string suma = "";
+            for (int i = 0; i <= 4; i++)
             {
-                if (i == 4)
+                if (i == 4 || i == 3)
                 {
-                    suma *= (int)Math.Pow(10, indeksy[i]);
                 }
-                else
-                    suma += indeksy[i];
+                else if (index[i] != 0)
+                    suma += index[i].ToString();
             }
-            textBox1.Text = suma.ToString();
-            
-            
+            int sumy = int.Parse(suma);
+            sumy *= (int)Math.Pow(10, index[4]);
+
+
+
+
+            textBox1.Text = sumy.ToString();
+
+
         }
 
         void Mnoznik()
         {
-            string mnoznik;
-            if (int.Parse(textBox1.Text) % 1000 == 0)
+            string mnoznik = "";
+            int wartosc = int.Parse(textBox1.Text);
+            if (wartosc / 100000 > 0)
             {
-
+                mnoznik = (wartosc / 100000).ToString() + "megaΩ ";
             }
+            else if (wartosc / 1000 > 0)
+            {
+                mnoznik = (wartosc / 1000).ToString() + "kΩ ";
+            }
+            else
+            {
+                mnoznik = wartosc.ToString() + "Ω ";
+            }
+            textBox2.Text = mnoznik + " " + button4.Text + " %";
         }
 
         private void zmienkolor(object sender, EventArgs e)
         {
             Button ourButton = (Button)sender;
+
             int ind = int.Parse(ourButton.Name.Substring(ourButton.Name.Length - 1)) - 1;
-            ourButton.BackColor = kolory[indeksy[ind]++];
-            if (indeksy[ind] == 10)
+            ourButton.BackColor = colors[index[ind]++];  //kolory
+
+
+
+            if (index[ind] == 10)
             {
-                indeksy[ind] = 0;
+                index[ind] = 0;
             }
-            if (ind == 4)
+            else if (ind == 4)
             {
-                ourButton.Text = Math.Pow(10, indeksy[ind]).ToString();
+                ourButton.Text = Math.Pow(10, index[ind]).ToString();
             }
-            ourButton.Text = indeksy[ind].ToString();
-            Sum();
+            else if (ind == 3)
+            {
+                ourButton.Text = tab[tolerancja].ToString();
+                if (tolerancja == 5)
+                {
+                    index[ind] = 0;
+                    tolerancja = 0;
+                }
+                else
+                {
+                    tolerancja++;
+                }
+            }
+            else ourButton.Text = index[ind].ToString();
+            Suma();
             Mnoznik();
+           
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
